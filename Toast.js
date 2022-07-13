@@ -1,15 +1,17 @@
-let cardContainer = null
+let cardContainer, timeout, interval, numberOfCards = 0
+cardContainer = timeout = interval = null
 const cardArray = []
 
 export default class Toast {
     defaultOpt = {
         message: 'This is the default message', 
-        position: 'top-right', 
+        position: 'top-left', 
         type: 'default',
         theme: 'light',
         progressBar: true, 
         enableClick: true,
-        autoClose: 1000
+        autoClose: 2000,
+        limit: 4,
     }
 
     #card = null
@@ -19,12 +21,12 @@ export default class Toast {
             this.defaultOpt[key] = value ?? this.defaultOpt[key]
         })
 
-        console.log(this.defaultOpt)
-        
-        this.theme()
-        this.createToast()
-        this.position()
-        this.timestamp()
+        if (this.defaultOpt.limit > numberOfCards) {
+            this.theme()
+            this.createToast()
+            this.position()
+            this.timestamp()
+        }
     }
 
     theme() {
@@ -32,6 +34,8 @@ export default class Toast {
     }
 
     createToast() {
+        numberOfCards++
+
         const cardDiv = document.createElement('div') 
         cardDiv.classList.add('card')
 
@@ -41,9 +45,22 @@ export default class Toast {
         const closeBtn = document.createElement('div')
         closeBtn.classList.add('close-btn')
 
+        closeBtn.addEventListener('click', () => {
+            this.onClose(true, closeBtn)
+        })
+
         cardDiv.append(p, closeBtn)
+
+        if (this.defaultOpt.enableClick) {
+            cardDiv.addEventListener('click', () => {
+                this.onClose(true, closeBtn)
+            })
+        }
+
         this.#card = cardDiv
         cardArray.push(cardDiv)
+
+        return 
     }
 
     position() {
@@ -54,35 +71,29 @@ export default class Toast {
 
         container.appendChild(this.#card)
         document.body.appendChild(container)
+
+        return 
     }
     
     timestamp() {
-        if (this.defaultOpt.progressBar) {
-            const progressBar = document.createElement('div')
-            progressBar.classList.add('progress-bar')
+        const progressBar = document.createElement('div')
+        progressBar.classList.add('progress-bar')
 
-            if (this.defaultOpt.type !== 'default') progressBar.style.setProperty('--color', `var(--${this.defaultOpt.type}-color)`)
+        if (this.defaultOpt.type !== 'default') progressBar.style.setProperty('--color', `var(--${this.defaultOpt.type}-color)`)
+        
+        if (!this.defaultOpt.progressBar) progressBar.style.setProperty('--color', `transparent`)
+
+        this.#card.appendChild(progressBar)
+        let width = Number(getComputedStyle(progressBar).getPropertyValue('--width').slice(0, 3))
+
+        interval = setInterval(() => {
+            if (Math.ceil(width) === 0) return 
             
-            this.#card.appendChild(progressBar)
-            let width = Number(getComputedStyle(progressBar).getPropertyValue('--width').slice(0, 3))
-    
-            setInterval(() => {
-                if (Math.ceil(width) === 0) return 
-                
-                width -= 600 / this.defaultOpt.autoClose
-                progressBar.style.setProperty('--width', `${width}%`)
-            }, 5)
+            width -= 600 / this.defaultOpt.autoClose
+            progressBar.style.setProperty('--width', `${width}%`)
+        }, 5)
 
-            setTimeout(() => {
-                if (cardContainer.children.length - 1 === 0) {
-                    document.body.removeChild(cardContainer)
-                    return 
-                }
-
-                cardContainer.removeChild(cardArray[0])
-                cardArray.shift()
-            }, this.defaultOpt.autoClose)
-        }
+        timeout = setTimeout(this.onClose, this.defaultOpt.autoClose, false, progressBar)
     }
 
     createContainer() {
@@ -91,5 +102,18 @@ export default class Toast {
         container.setAttribute('data-position', this.defaultOpt.position)
 
         return container
+    }
+
+    onClose(clicked, { parentElement }) {
+        numberOfCards--
+
+        if (clicked) clearTimeout(timeout)
+
+        cardContainer.removeChild(cardArray[cardArray.indexOf(parentElement)])
+        cardArray.splice(cardArray.indexOf(parentElement), cardArray.indexOf(parentElement))
+
+        if (cardArray.length === 1) document.body.removeChild(cardContainer)
+
+        return 
     }
 }
