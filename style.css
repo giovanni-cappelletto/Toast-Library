@@ -150,3 +150,13 @@ label {
     height: 5px; 
     background-color: var(--color);
 }
+
+.credits {
+    color: var(--primary-color);
+    position: absolute; 
+    top: 95%;
+}
+
+.credits a {
+    color: var(--info-color);
+}
