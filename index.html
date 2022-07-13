@@ -8,6 +8,67 @@
     <script src="script.js" type="module"></script>
 </head>
 <body>
-    <button class="btn">Show Toast</button>
+    <button class="btn show">Show Toast</button>
+
+    <main>
+        <section>
+            <h2 class="title">Position</h2>
+            <div>
+                <button class="btn position active">top-left</button>
+                <button class="btn position">top-right</button>
+                <button class="btn position">top-center</button>
+                <button class="btn position">bottom-left</button>
+                <button class="btn position">bottom-right</button>
+                <button class="btn position">bottom-center</button>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="title">Type</h2>
+            <div>
+                <button class="btn type">info</button>
+                <button class="btn type">success</button>
+                <button class="btn type">warning</button>
+                <button class="btn type">error</button>
+                <button class="btn type active">default</button>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="title">Theme</h2>
+            <div>
+                <button class="btn theme active">light</button>
+                <button class="btn theme">dark</button>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="title">Other Options</h2>
+            <div class="btn-container">
+                <div>
+                    <input type="checkbox" id="progressBar" checked>
+                    <label for="progressBar">progressBar</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="enableClick" checked>
+                    <label for="enableClick">enableClick</label>
+                </div>
+
+                <div>
+                    <input type="number" id="autoClose" value="1000" min="1000" placeholder="1000">
+                    <label for="autoClose">autoClose</label>
+                </div>
+
+                <div>
+                    <input type="number" id="limit" value="4" placeholder="4">
+                    <label for="limit">limit</label>            
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <p class="credits">Made by <a href="">Giovanni Cappelletto</a></p>
+
 </body>
 </html>
