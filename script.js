@@ -1,25 +1,62 @@
 import Toast from './Toast.js'
 
-const showToastBtn = document.querySelector('.btn')
+const positionBtns = document.querySelectorAll('.position')
+const typeBtns = document.querySelectorAll('.type')
+const themeBtns = document.querySelectorAll('.theme')
+const progressBar = document.querySelector('#progressBar')
+const enableClick = document.querySelector('#enableClick')
+const autoClose = document.querySelector('#autoClose')
+const limit = document.querySelector('#limit')
+const regExp = /[0-9]/
+const showBtn = document.querySelector('.show') 
 
-showToastBtn.addEventListener('click', () => {
-    const toast = new Toast({ 
-        message: 'Adesso è dura!',
-        position: 'top-left',
-        type: 'warning', 
-        theme: 'light',
-        progressBar: true,
-        autoClose: 2000,
+const toast = {  }
+
+const activeElement = (array, element) => {
+    for (const btn of array) {
+        btn.classList.remove('active')
+    }
+
+    element.classList.add('active')
+}
+
+positionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        activeElement(positionBtns, btn)
+
+        toast.position = btn.textContent
     })
 })
-    
 
+typeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        activeElement(typeBtns, btn)
+        
+        toast.type = btn.textContent
+    })
+})
 
-/*
-    Mancano: 
-    - Close Btn
-    - EnableClick
+themeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        activeElement(themeBtns, btn)
+        
+        toast.theme = btn.textContent
+    })
+})
 
-    BONUS: - Limit 
-           - Pause on Hover (difficult)
-*/
+autoClose.addEventListener('input', ({ data }) => {
+    if (!regExp.test(data)) autoClose.value = 1000
+})
+
+limit.addEventListener('input', ({ data }) => {
+    if (!regExp.test(data)) limit.value = 4
+})
+
+showBtn.addEventListener('click', () => {
+    toast.progressBar = progressBar.checked
+    toast.enableClick = enableClick.checked
+    toast.limit = Number(limit.value)
+    toast.autoClose = Number(autoClose.value)
+
+    new Toast(toast)
+})
