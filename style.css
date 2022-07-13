@@ -32,6 +32,11 @@ body {
     background-color: var(--secondary-color);
 }
 
+.title {
+    color: var(--primary-color);
+    margin-block: 30px; 
+}
+
 .btn {
     outline: none;
     cursor: pointer;
@@ -41,6 +46,21 @@ body {
     font-weight: 500;
     padding: 10px 15px; 
     border: 2px solid var(--primary-color); 
+}
+
+.btn.active {
+    color: var(--secondary-color);
+    background-color: var(--primary-color);
+}
+
+.btn-container {
+    display: flex; 
+    gap: 3rem; 
+}
+
+label {
+    color: var(--primary-color);
+    margin-inline: 10px;
 }
 
 .container {
